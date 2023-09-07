@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="report"
+    targetNamespace="report"
+    elementFormDefault="qualified">
+    <xs:element name="report">
+        <xs:complexType>
+            <!-- 定义元素 -->
+            <xs:sequence>
+                <xs:element ref="html" minOccurs="0" maxOccurs="1"></xs:element>
+                <xs:element ref="datasource" minOccurs="1" maxOccurs="1"></xs:element>
+                <xs:element ref="layout" minOccurs="1" maxOccurs="1"></xs:element>
+            </xs:sequence>
+            <!-- 定义属性 -->
+            <xs:attribute name="id" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- 自定义HTML模板 -->
+    <xs:element name="html">
+        <xs:complexType>
+            <xs:attribute name="path" type="xs:string" use="required"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- 数据源定义 -->
+    <xs:element name="datasource">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="datasets" minOccurs="1" maxOccurs="1"></xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- 数据来源方式 -->
+    <xs:simpleType name="reqMethod">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HTTP" />
+            <xs:enumeration value="RPC" />
+            <xs:enumeration value="JDBC" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- 简单数据类型 -->
+    <xs:simpleType name="simpleDataType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="int" />
+            <xs:enumeration value="long" />
+            <xs:enumeration value="float" />
+            <xs:enumeration value="double" />
+            <xs:enumeration value="bigDecimal" />
+            <xs:enumeration value="string" />
+            <xs:enumeration value="date" />
+            <xs:enumeration value="datetime" />
+            <xs:enumeration value="timestamp" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- 引用数据类型 -->
+    <xs:simpleType name="refDataType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="#\{\w+(\[(\^|\?|\$)\])?(\.\w+(\[(\^|\?|\$)\])?)*\}" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- req method HTTP -->
+    <xs:element name="http">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="url" minOccurs="1" maxOccurs="1"></xs:element>
+                <!-- 参数 -->
+                <xs:element name="params" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="param" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <!-- 定义参数的属性 -->
+                                    <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                    <xs:attribute name="desc" type="xs:string" use="optional"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <!-- 结果集映射 -->
+                <xs:element name="resultMap" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="result" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <!-- 定义结果元素的属性 -->
+                                    <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                    <xs:attribute name="type" type="simpleDataType" use="required"></xs:attribute>
+                                    <xs:attribute name="desc" type="xs:string" use="optional"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- req method RPC -->
+    <xs:element name="rpc">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="url" minOccurs="1" maxOccurs="1"></xs:element>
+                <!-- 参数 -->
+                <xs:element name="params" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="param" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <!-- 定义参数的属性 -->
+                                    <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                    <xs:attribute name="desc" type="xs:string" use="optional"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <!-- 结果集映射 -->
+                <xs:element name="resultMap" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="result" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <!-- 定义结果元素的属性 -->
+                                    <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                    <xs:attribute name="type" type="simpleDataType" use="required"></xs:attribute>
+                                    <xs:attribute name="rpcData" type="refDataType"
+                                        use="required"></xs:attribute>
+                                    <xs:attribute name="desc" type="xs:string" use="optional"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- req method JDBC -->
+    <xs:element name="jdbc">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- SQL语句 -->
+                <xs:element name="sql" minOccurs="1" maxOccurs="1"></xs:element>
+                <!-- 参数 -->
+                <xs:element name="params" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="param" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <!-- 定义参数的属性 -->
+                                    <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                    <xs:attribute name="type" type="xs:string" use="required"></xs:attribute>
+                                    <xs:attribute name="desc" type="xs:string" use="optional"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <!-- 结果集映射 -->
+                <xs:element name="resultMap" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="result" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <!-- 定义结果元素的属性 -->
+                                    <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                    <xs:attribute name="type" type="simpleDataType" use="required"></xs:attribute>
+                                    <xs:attribute name="desc" type="xs:string" use="optional"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- 数据集 -->
+    <xs:element name="datasets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dataset" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="reqMethod" type="reqMethod"></xs:element>
+                            <xs:element ref="jdbc" minOccurs="0"></xs:element>
+                        </xs:all>
+                        <!-- 定义dadaset的属性 -->
+                        <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                        <xs:attribute name="desc" type="xs:string" use="optional"></xs:attribute>
+                    </xs:complexType>
+
+                </xs:element>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- 定义图表 -->
+    <xs:element name="charts">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="barChart"></xs:element>
+                <xs:element ref="lineChart"></xs:element>
+                <xs:element ref="pieChart"></xs:element>
+                <xs:element ref="scatterChart"></xs:element>
+                <xs:element ref="customChart"></xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- 柱状图 -->
+    <xs:element name="barChart">
+        <xs:complexType>
+            <!-- 定义元素 -->
+            <xs:sequence>
+                <!-- 定义数据 -->
+                <xs:element name="datas" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="rawData" minOccurs="1">
+                                <xs:complexType>
+                                    <!-- <xs:attribute name="name" type="xs:string"
+                                    use="required"></xs:attribute> -->
+                                    <xs:attribute name="xData" type="refDataType" use="required"></xs:attribute>
+                                    <xs:attribute name="yData" type="refDataType" use="required"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <!-- 定义属性 -->
+            <xs:attribute name="id" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="title" type="xs:string" use="optional"></xs:attribute>
+            <xs:attribute name="xTitle" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="yTitle" type="xs:string" use="required"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- 折线图 -->
+    <xs:element name="lineChart">
+        <xs:complexType>
+            <!-- 定义元素 -->
+            <xs:sequence>
+                <!-- 定义数据 -->
+                <xs:element name="datas" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="rawData" minOccurs="1">
+                                <xs:complexType>
+                                    <!-- <xs:attribute name="name" type="xs:string"
+                                    use="required"></xs:attribute> -->
+                                    <xs:attribute name="xData" type="refDataType" use="required"></xs:attribute>
+                                    <xs:attribute name="yData" type="refDataType" use="required"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <!-- 定义属性 -->
+            <xs:attribute name="id" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="title" type="xs:string" use="optional"></xs:attribute>
+            <xs:attribute name="xTitle" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="yTitle" type="xs:string" use="required"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- 饼图 -->
+    <xs:element name="pieChart">
+        <xs:complexType>
+            <!-- 定义元素 -->
+            <xs:sequence>
+                <!-- 定义数据 -->
+                <xs:element name="datas" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="rawData" minOccurs="1">
+                                <xs:complexType>
+                                    <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                    <xs:attribute name="value" type="simpleDataType" use="required"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <!-- 定义属性 -->
+            <xs:attribute name="id" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="title" type="xs:string" use="optional"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- 散点图 -->
+    <xs:element name="scatterChart">
+        <xs:complexType>
+            <!-- 定义元素 -->
+            <xs:sequence>
+                <!-- 定义数据 -->
+                <xs:element name="datas" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="rawData" minOccurs="1">
+                                <xs:complexType>
+                                    <!-- <xs:attribute name="name" type="xs:string"
+                                    use="required"></xs:attribute> -->
+                                    <xs:attribute name="xData" type="refDataType" use="required"></xs:attribute>
+                                    <xs:attribute name="yData" type="refDataType" use="required"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <!-- 定义属性 -->
+            <xs:attribute name="id" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="title" type="xs:string" use="optional"></xs:attribute>
+            <xs:attribute name="xTitle" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="yTitle" type="xs:string" use="required"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- 自定义图表 -->
+    <xs:element name="customChart">
+        <xs:complexType>
+            <!-- 定义元素 -->
+            <xs:sequence>
+                <!-- 定义数据 -->
+                <xs:element name="datas" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="rawData" minOccurs="1">
+                                <xs:complexType>
+                                    <!-- <xs:attribute name="name" type="xs:string"
+                                    use="required"></xs:attribute> -->
+                                    <xs:attribute name="key" type="simpleDataType" use="required"></xs:attribute>
+                                    <xs:attribute name="value" type="simpleDataType" use="required"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <!-- 定义属性 -->
+            <xs:attribute name="id" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="title" type="xs:string" use="optional"></xs:attribute>
+            <xs:attribute name="key" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="templatePath" type="xs:string" use="required"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- 定义表格 -->
+    <xs:element name="tables">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="table" minOccurs="1" maxOccurs="unbounded">
+
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- 定义表格 -->
+    <xs:element name="table">
+        <xs:complexType>
+            <!-- 定义元素 -->
+            <xs:sequence>
+                <!-- 定义数据 -->
+                <xs:element name="columns" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="dataColumn" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                    <xs:attribute name="data" type="refDataType" use="required"></xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <!-- 定义属性 -->
+            <xs:attribute name="id" type="xs:string" use="required"></xs:attribute>
+            <xs:attribute name="name" type="xs:string" use="optional"></xs:attribute>
+            <xs:attribute name="page" type="xs:string" use="optional" default="false"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+
+    <!-- 布局 -->
+    <xs:element name="layout">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- 定义菜单，多级菜单以 / 分隔 -->
+                <xs:element name="menu" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+                <!-- 定义报表标题 -->
+                <xs:element name="title" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+                <!-- 定义图表元素 -->
+                <xs:element ref="charts" minOccurs="0" maxOccurs="1"></xs:element>
+                <xs:element ref="tables" minOccurs="0" maxOccurs="1"></xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+</xs:schema>
