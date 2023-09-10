@@ -1,0 +1,243 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "report": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "datasets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "desc": {
+                "type": "string"
+              },
+              "req_method": {
+                "type": "string"
+              },
+              "configuration": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string"
+                  }
+                },
+                "required": []
+              },
+              "exec": {
+                "type": "string"
+              },
+              "params": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "desc": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "required",
+                    "type",
+                    "desc"
+                  ]
+                }
+              },
+              "result_map": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "desc": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "type",
+                    "desc"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "desc",
+              "req_method",
+              "configuration",
+              "exec",
+              "params",
+              "result_map"
+            ]
+          }
+        },
+        "layout": {
+          "type": "object",
+          "properties": {
+            "menu": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "router": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "router"
+              ]
+            },
+            "charts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "datas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "x_data": {
+                          "type": "string"
+                        },
+                        "y_data": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      },
+                      "required": []
+                    }
+                  },
+                  "x_label": {
+                    "type": "string"
+                  },
+                  "y_label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "name",
+                  "title",
+                  "datas"
+                ]
+              }
+            },
+            "tables": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "page": {
+                    "type": "boolean"
+                  },
+                  "columns": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "hidden": {
+                          "type": "boolean"
+                        },
+                        "export": {
+                          "type": "boolean"
+                        },
+                        "data": {
+                          "type": "string"
+                        },
+                        "desc": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "hidden",
+                        "export",
+                        "data",
+                        "desc"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "page",
+                  "columns"
+                ]
+              }
+            }
+          },
+          "required": [
+            "menu",
+            "charts",
+            "tables"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "datasets",
+        "layout"
+      ]
+    }
+  },
+  "required": [
+    "report"
+  ]
+}
