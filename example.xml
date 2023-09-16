@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report id="exampleReport" name="测试报表"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="report"
+  xsi:schemaLocation="report report.xsd"
+>
+  <datasource>
+    <datasets>
+      <dataset name="">
+        <reqMethod>HTTP</reqMethod>
+      </dataset>
+    </datasets>
+  </datasource>
+  <layout>
+    <menu name="测试报表/测试报表" />
+    <title name="测试报表标题" />
+  </layout>
+</report>

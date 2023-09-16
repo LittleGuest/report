@@ -1,222 +1,220 @@
 {
-  "report": {
-    "name": "报表",
-    "datasets": [
+  "name": "报表",
+  "datasets": [
+    {
+      "id": "dataset1",
+      "desc": "dataset配置",
+      "req_method": "RPC",
+      "configuration": {},
+      "exec": "/bdcampus/terminal-secure-event/v1/queryReportEventPage",
+      "params": [
+        {
+          "name": "startTime",
+          "required": true,
+          "type": "number",
+          "desc": "开始时间"
+        },
+        {
+          "name": "endTime",
+          "required": true,
+          "type": "number",
+          "desc": "结束时间"
+        },
+        {
+          "name": "orgId",
+          "required": true,
+          "type": "number",
+          "desc": "机构id"
+        },
+        {
+          "name": "pageNum",
+          "required": true,
+          "type": "number",
+          "desc": "页码"
+        },
+        {
+          "name": "pageSize",
+          "required": true,
+          "type": "number",
+          "desc": "每页数"
+        }
+      ],
+      "result_map": [
+        {
+          "name": "firstName",
+          "type": "string",
+          "desc": "姓"
+        },
+        {
+          "name": "lastName",
+          "type": "string",
+          "desc": "名"
+        },
+        {
+          "name": "firstLabel",
+          "type": "string",
+          "desc": "第一个标签"
+        },
+        {
+          "name": "anyLabel",
+          "type": "string",
+          "desc": "任意一个标签"
+        },
+        {
+          "name": "lastLabel",
+          "type": "string",
+          "desc": "最后一个标签"
+        },
+        {
+          "name": "allLabels",
+          "type": "string",
+          "desc": "所有标签"
+        }
+      ]
+    },
+    {
+      "id": "dataset2",
+      "desc": "dataset配置",
+      "req_method": "SQL",
+      "configuration": {
+        "url": "postgres://postgres:password@localhost/test"
+      },
+      "exec": "select first_name,last_name from example where time > {{startTime}} and time < {{endTime}} and user_ids in ({{userIds}}) ",
+      "params": [
+        {
+          "name": "userIds",
+          "required": true,
+          "type": "array",
+          "desc": "用户id"
+        },
+        {
+          "name": "startTime",
+          "required": true,
+          "type": "number",
+          "desc": "开始时间"
+        },
+        {
+          "name": "endTime",
+          "required": true,
+          "type": "number",
+          "desc": "结束时间"
+        }
+      ],
+      "result_map": [
+        {
+          "name": "firstName",
+          "type": "string",
+          "desc": "姓"
+        },
+        {
+          "name": "lastName",
+          "type": "string",
+          "desc": "名"
+        }
+      ]
+    }
+  ],
+  "layout": {
+    "menu": {
+      "name": "数据报表/示例报表",
+      "router": "report1/report2"
+    },
+    "charts": [
       {
-        "id": "dataset1",
-        "desc": "dataset配置",
-        "req_method": "RPC",
-        "configuration": {},
-        "exec": "/bdcampus/terminal-secure-event/v1/queryReportEventPage",
-        "params": [
+        "id": "pieCount",
+        "type": "pie_chart",
+        "name": "饼状图统计",
+        "title": "饼状图统计",
+        "datas": [
           {
-            "name": "startTime",
-            "required": true,
-            "type": "number",
-            "desc": "开始时间"
+            "name": "{{example.firstName}}",
+            "value": "{{example.lastName}}"
           },
           {
-            "name": "endTime",
-            "required": true,
-            "type": "number",
-            "desc": "结束时间"
-          },
-          {
-            "name": "orgId",
-            "required": true,
-            "type": "number",
-            "desc": "机构id"
-          },
-          {
-            "name": "pageNum",
-            "required": true,
-            "type": "number",
-            "desc": "页码"
-          },
-          {
-            "name": "pageSize",
-            "required": true,
-            "type": "number",
-            "desc": "每页数"
-          }
-        ],
-        "result_map": [
-          {
-            "name": "firstName",
-            "type": "string",
-            "desc": "姓"
-          },
-          {
-            "name": "lastName",
-            "type": "string",
-            "desc": "名"
-          },
-          {
-            "name": "firstLabel",
-            "type": "string",
-            "desc": "第一个标签"
-          },
-          {
-            "name": "anyLabel",
-            "type": "string",
-            "desc": "任意一个标签"
-          },
-          {
-            "name": "lastLabel",
-            "type": "string",
-            "desc": "最后一个标签"
-          },
-          {
-            "name": "allLabels",
-            "type": "string",
-            "desc": "所有标签"
+            "name": "{{example.firstName}}",
+            "value": "{{example.lastName}}"
           }
         ]
       },
       {
-        "id": "dataset2",
-        "desc": "dataset配置",
-        "req_method": "SQL",
-        "configuration": {
-          "url": "postgres://postgres:password@localhost/test"
-        },
-        "exec": "select first_name,last_name from example where time > #{startTime} and time < #{endTime} and user_ids in (#{userIds}) ",
-        "params": [
+        "id": "lineCount",
+        "type": "line_chart",
+        "name": "折线图统计",
+        "title": "折线图统计",
+        "x_label": "姓",
+        "y_label": "名",
+        "datas": [
           {
-            "name": "userIds",
-            "required": true,
-            "type": "array",
-            "desc": "用户id"
-          },
-          {
-            "name": "startTime",
-            "required": true,
-            "type": "number",
-            "desc": "开始时间"
-          },
-          {
-            "name": "endTime",
-            "required": true,
-            "type": "number",
-            "desc": "结束时间"
+            "x_data": "{{example.lastName}}",
+            "y_data": "{{example.firstName}}"
           }
-        ],
-        "result_map": [
+        ]
+      },
+      {
+        "id": "barCount",
+        "type": "bar_chart",
+        "name": "柱状图统计",
+        "title": "柱状统计",
+        "x_label": "姓名",
+        "y_label": "出现次数",
+        "datas": [
           {
-            "name": "firstName",
-            "type": "string",
-            "desc": "姓"
-          },
+            "x_data": "{{example.lastName}}",
+            "y_data": "{{example.firstName}}"
+          }
+        ]
+      },
+      {
+        "id": "scatterCount",
+        "type": "scatter_chart",
+        "name": "散点图统计",
+        "title": "散点图统计",
+        "x_label": "姓名",
+        "y_label": "出现次数",
+        "datas": [
           {
-            "name": "lastName",
-            "type": "string",
-            "desc": "名"
+            "x_data": "{{example.lastName}}",
+            "y_data": "{{example.firstName}}"
+          }
+        ]
+      },
+      {
+        "id": "customCount",
+        "type": "custom_chart",
+        "name": "自定义统计",
+        "title": "自定义统计",
+        "x_label": "姓名",
+        "y_label": "出现次数",
+        "datas": [
+          {
+            "key": "{{example.lastName}}",
+            "value": "{{example.firstName}}"
           }
         ]
       }
     ],
-    "layout": {
-      "menu": {
-        "name": "数据报表/示例报表",
-        "router": "report1/report2"
-      },
-      "charts": [
-        {
-          "id": "pieCount",
-          "type": "pie_chart",
-          "name": "饼状图统计",
-          "title": "饼状图统计",
-          "datas": [
-            {
-              "name": "{{example.firstName}}",
-              "value": "{{example.lastName}}"
-            },
-            {
-              "name": "{{example.firstName}}",
-              "value": "{{example.lastName}}"
-            }
-          ]
-        },
-        {
-          "id": "lineCount",
-          "type": "line_chart",
-          "name": "折线图统计",
-          "title": "折线图统计",
-          "x_label": "姓",
-          "y_label": "名",
-          "datas": [
-            {
-              "x_data": "{{example.lastName}}",
-              "y_data": "{{example.firstName}}"
-            }
-          ]
-        },
-        {
-          "id": "barCount",
-          "type": "bar_chart",
-          "name": "柱状图统计",
-          "title": "柱状统计",
-          "x_label": "姓名",
-          "y_label": "出现次数",
-          "datas": [
-            {
-              "x_data": "{{example.lastName}}",
-              "y_data": "{{example.firstName}}"
-            }
-          ]
-        },
-        {
-          "id": "scatterCount",
-          "type": "scatter_chart",
-          "name": "散点图统计",
-          "title": "散点图统计",
-          "x_label": "姓名",
-          "y_label": "出现次数",
-          "datas": [
-            {
-              "x_data": "{{example.lastName}}",
-              "y_data": "{{example.firstName}}"
-            }
-          ]
-        },
-        {
-          "id": "customCount",
-          "type": "custom_chart",
-          "name": "自定义统计",
-          "title": "自定义统计",
-          "x_label": "姓名",
-          "y_label": "出现次数",
-          "datas": [
-            {
-              "key": "{{example.lastName}}",
-              "value": "{{example.firstName}}"
-            }
-          ]
-        }
-      ],
-      "tables": [
-        {
-          "id": "tableCount",
-          "name": "表格统计",
-          "page": true,
-          "columns": [
-            {
-              "id": "firstName",
-              "hidden": false,
-              "export": true,
-              "data": "{{example.firstName}}",
-              "desc": "名"
-            },
-            {
-              "id": "lastName",
-              "hidden": false,
-              "export": true,
-              "data": "{{example.lastName}}",
-              "desc": "姓"
-            }
-          ]
-        }
-      ]
-    }
+    "tables": [
+      {
+        "id": "tableCount",
+        "name": "表格统计",
+        "page": true,
+        "columns": [
+          {
+            "id": "firstName",
+            "hidden": false,
+            "export": true,
+            "data": "{{example.firstName}}",
+            "desc": "名"
+          },
+          {
+            "id": "lastName",
+            "hidden": false,
+            "export": true,
+            "data": "{{example.lastName}}",
+            "desc": "姓"
+          }
+        ]
+      }
+    ]
   }
 }
