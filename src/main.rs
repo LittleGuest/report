@@ -19,4 +19,11 @@ fn main() {
     // println!("{valid:#?}");
     let report = serde_json::from_str::<report::report::Report>(&report).unwrap();
     println!("{report:#?}");
+
+    // 1、通过json schema校验json文件
+    // 2、反序列化json文件到struct，解析json文件
+    // 3、根据Rpc或HTTP或SQL请求数据
+    // 4、根据json文件解析返回的数据
+    // 5、组装数据
+    // 6、生成报表
 }
